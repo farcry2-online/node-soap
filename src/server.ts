@@ -605,7 +605,7 @@ export class Server extends EventEmitter {
       : 'http://schemas.xmlsoap.org/soap/envelope/';
 
     let xml = '<?xml version="1.0" encoding="utf-8"?>' +
-      '<soap:Envelope xmlns:soap="' + envelopeDefinition + '" ' +
+      '<s:Envelope xmlns:s="' + envelopeDefinition + '" ' +
       encoding +
       this.wsdl.xmlnsInEnvelope + '>';
 
@@ -616,7 +616,7 @@ export class Server extends EventEmitter {
       const created = getDateString(now);
       const expires = getDateString(new Date(now.getTime() + (1000 * 600)));
 
-      headers += '<o:Security soap:mustUnderstand="1" ' +
+      headers += '<o:Security s:mustUnderstand="1" ' +
         'xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" ' +
         'xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">' +
         '    <u:Timestamp u:Id="_0">' +
@@ -627,12 +627,12 @@ export class Server extends EventEmitter {
     }
 
     if (headers !== '') {
-      xml += '<soap:Header>' + headers + '</soap:Header>';
+      xml += '<s:Header>' + headers + '</s:Header>';
     }
 
-    xml += body ? '<soap:Body>' + body + '</soap:Body>' : '<soap:Body/>';
+    xml += body ? '<s:Body>' + body + '</s:Body>' : '<s:Body/>';
 
-    xml += '</soap:Envelope>';
+    xml += '</s:Envelope>';
     return xml;
   }
 
@@ -649,7 +649,7 @@ export class Server extends EventEmitter {
       // Soap 1.1 error style
       // Root element will be prependend with the soap NS
       // It must match the NS defined in the Envelope (set by the _envelope method)
-      fault = this.wsdl.objectToDocumentXML('soap:Fault', soapFault, undefined);
+      fault = this.wsdl.objectToDocumentXML('s:Fault', soapFault, undefined);
     } else {
       // Soap 1.2 error style.
       // 3rd param is the NS prepended to all elements
